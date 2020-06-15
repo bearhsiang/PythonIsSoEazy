@@ -8,6 +8,7 @@ def start_game(N):
 	end = N
 	guess = -1
 	count = 0
+	print('')
 	while guess != ans:
 		guess = input(f"guess a number between {start} - {end}: ")
 		guess = int(guess)
@@ -28,7 +29,7 @@ def print_help(name):
 	print(f"3. show my status")
 	print(f"4. show scoreboard")
 	print(f"5. save")
-	print(f"6. quit")
+	print(f"6. quit and save")
 
 def print_login():
 	print('')
@@ -59,7 +60,7 @@ def login(usersdata):
 	q = input('>> ')
 	if q == '1':
 		usersdata['guest'] = {
-			'highest': -1,
+			'highest': float('inf'),
 			'times': 0,
 		}
 		return 'guest'
@@ -80,7 +81,7 @@ def login(usersdata):
 				print(f'user {name} already exists ...')
 			else:
 				usersdata[name] = {
-					'highest': -1,
+					'highest': float('inf'),
 					'times': 0,
 				}
 			return name
@@ -93,6 +94,7 @@ def main_loop(name, usersdata):
 		q = input('>> ')
 		
 		if q == '1':
+
 			result = start_game(10)
 			usersdata[name]['times'] += 1
 			print(f'Congraduate! you get {result}')
@@ -101,6 +103,7 @@ def main_loop(name, usersdata):
 				usersdata[name]['highest'] = result
 
 		elif q == '2':
+
 			new_name = input('New Name: ')
 			if new_name == name:
 				print(f'your name is already {name}')
@@ -118,12 +121,20 @@ def main_loop(name, usersdata):
 			print(f'highest: {usersdata[name]["highest"]}')
 		
 		elif q == '4':
-			for user_name in usersdata:
-				if user_name != 'guest'
-				print(f'{user_name}: {usersdata[user_name]}')
+
+			pairs = list(usersdata.items())
+			pairs.sort(key=lambda x: x[1]['highest'])
+			for player in pairs:
+				if player[0] != 'guest' or name == 'guest': 
+					print(player)
+		
 		elif q == '5':
+			
 			json.dump(usersdata, open('data.json', 'w'))
+		
 		elif q == '6':
+
+			json.dump(usersdata, open('data.json', 'w'))
 			break
 		
 
