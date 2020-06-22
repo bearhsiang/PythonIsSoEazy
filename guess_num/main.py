@@ -95,7 +95,7 @@ def main_loop(name, usersdata):
 		
 		if q == '1':
 
-			result = start_game(10)
+			result = start_game(1000)
 			usersdata[name]['times'] += 1
 			print(f'Congraduate! you get {result}')
 			if result < usersdata[name]['highest'] or usersdata[name]['highest'] < 0:
