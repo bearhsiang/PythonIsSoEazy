@@ -8,13 +8,14 @@ while True:
  \____|\__,_|\___||___/___/_| \_|\__,_|_| |_| |_| \n\
     ')
     print('1. Start game')
-    print('2. quiz')
+    print('2. quit')
 
     op = input('>>> ')
     if op == '1':
+
+        ans = int(input('please input the ans (0~100): '))
         start = 0
         end = 100
-        ans = int(input('please input the ans ('+str(start)+'~'+str(end)+'): '))
         count = 0
         while True:
             print('round', count)
