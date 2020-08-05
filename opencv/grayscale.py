@@ -8,3 +8,5 @@ cv2.imshow('color', img)
 cv2.imshow('gray', gray)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
+
+cv2.imwrite('gray.jpg', gray)
