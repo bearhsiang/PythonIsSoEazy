@@ -1,4 +1,8 @@
 guess_num/data.json
+*.mp4
+*.avi
+*.jpg
+*.xml
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
