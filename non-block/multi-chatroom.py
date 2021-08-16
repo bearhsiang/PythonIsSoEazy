@@ -7,7 +7,7 @@ if __name__ == '__main__':
 
     # server setup
     s = socket.socket()
-    ip, port = '', 12345
+    ip, port = '', 12346
     s.bind((ip, port))
     s.listen()
     connect_list = []

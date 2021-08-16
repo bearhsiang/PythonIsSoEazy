@@ -3,16 +3,16 @@ import select
 import random
 
 s = socket.socket()
-ip, port = '', 12345
+ip, port = '', 12346
 s.bind((ip, port))
 s.listen()
 
 timeout = 0.001
 
 connect_list =[]
-id2name = {}
-name2id = {}
-id2connect = {}
+name2conn = {}
+conn2name = {}
+
 
 while True:
 
@@ -22,9 +22,8 @@ while True:
         conn, addr = s.accept()
         connect_list.append(conn)
         default_name = f'User{random.randrange(10000)}'
-        id2name[conn.fileno()] = default_name
-        name2id[default_name] = conn.fileno()
-        id2connect[conn.fileno()] = conn
+        name2conn[default_name] = conn
+        conn2name[conn] = default_name
 
     read_list, _, _ = select.select(connect_list, [], [], 0.001)
 
@@ -34,25 +33,31 @@ while True:
         if message[0] == 'broadcast':
             text = ' '.join(message[1:])
             for conn in connect_list:
-                conn.sendall(f'[broadcast] {id2name[read_conn.fileno()]}: {text}\n'.encode())
+                conn.sendall(f'[broadcast] {conn2name[read_conn]}: {text}\n'.encode())
 
         if message[0] == 'name':
             name = ' '.join(message[1:])
-            id2name[read_conn.fileno()] = name
-            name2id[name] = read_conn.fileno()
+            conn2name[read_conn] = name
+            name2conn[name] = read_conn
             read_conn.sendall(f'[info] set name to "{name}"\n'.encode())
         
         if message[0] == 'exit':
             read_conn.close()
             connect_list.remove(read_conn)
+            name = conn2name[read_conn]
+            del conn2name[read_conn]
+            del name2conn[name]
 
         if message[0] == 'private':
             name = message[1]
             text = ' '.join(message[2:])
-            sender = id2name[read_conn.fileno()]
-            id2connect[name2id[name]].sendall(f'[private] {sender}: {text}\n'.encode())
+            sender = conn2name[read_conn]
+            name2conn[name].sendall(f'[private] {sender}: {text}\n'.encode())
 
         if message[0] == 'myname':
-            name = id2name[read_conn.fileno()]
+            name = conn2name[read_conn]
             read_conn.sendall(f'[info] {name}\n'.encode())
 
+        if message[0] == 'list':
+            users = list(name2conn.keys())
+            read_conn.sendall(f"{' '.join(users)}\n".encode())
